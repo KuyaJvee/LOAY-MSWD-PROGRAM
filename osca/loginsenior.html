@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Login - Senior MSWDO Loay</title>
+  <link rel="stylesheet" href="css/login.css">
+</head>
+<body id="loginpage">
+  <!-- Login Section -->
+  <div id="loginSection" class="login-container">   
+    <div class="login-header">
+      <img src="img/SEAL OF MSWDO.png" alt="Logo" class="login-logo">
+      <img src="img/SEAL OF LOAY.png" alt="Logo" class="login-logo">
+      <h2>MSWDO - LOAY</h2>
+      <h3>OFFICE OF THE SENIOR CITIZEN AFFAIRS</h3>
+    </div>
+    <div class="login-box">
+      <h3>Login</h3>
+      <form id="loginForm">
+        <input type="text" id="username" placeholder="Username" required>
+        <input type="password" id="password" placeholder="Password" required>
+        <button type="submit">Login</button>
+      </form>
+
+      <!-- Separate Button -->
+      <button onclick="window.location.href='../index.html'" class="outside-btn">
+        Choose Program
+      </button>
+    </div>
+  </div>
+
+  <script src="loginsenior.js"></script>
+  <script>
+    document.getElementById('loginForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      const username = document.getElementById('username').value.trim();
+      const password = document.getElementById('password').value.trim();
+
+      const fixedUser = "MSWDSC";
+      const fixedPass = "screcords";
+
+      if (username === fixedUser && password === fixedPass) {
+        // Use sessionStorage so login expires when browser closes
+        sessionStorage.setItem("loggedIn", "true");
+        window.location.href = "index.html"; 
+      } else {
+        alert("Invalid username or password.");
+      }
+    });
+  </script>
+</body>
+</html>

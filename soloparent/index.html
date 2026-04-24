@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script>
+    // Redirect to login if not logged in
+    if (sessionStorage.getItem("loggedIn") !== "true") {
+      window.location.replace("loginsp.html");
+    }
+  </script>
+  <meta charset="UTF-8">
+  <title>Solo Parents Program</title>
+  <link rel="stylesheet" href="style/style.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <script src="data/data.js" defer></script>
+</head>
+<body>
+  <!-- HEADER -->
+  <header>
+    <div class="header-left">
+      <img src="img/SEAL OF LOAY.png" alt="Logo 1" class="logo">
+      <img src="img/SEAL OF MSWDO.png" alt="Logo 2" class="logo">
+      <div class="title">
+        <h1>MUNICIPAL SOCIAL WELFARE AND DEVELOPMENT OFFICE – LOAY</h1>
+        <h2>SOLO PARENTS</h2>
+      </div>
+    </div>
+    <div class="header-right">
+      <button id="importBtn" type="button">Import Data ⬇️</button>
+      <button id="exportBtn" type="button">Export to Excel ⬆️</button>
+      <input type="file" id="importFile" accept=".xlsx" style="display:none;">
+      <button id="logoutBtn" type="button">Logout ➜</button>
+    </div>
+  </header>
+
+  <form>
+
+    <!-- CATEGORY SEARCH -->
+    <div class="search-section">
+      <input type="text" id="nameSearch" placeholder="Search name (type any part of the name)..." autocomplete="off">
+      <button id="nameSearchClear" type="button">Clear</button>
+      <select id="categorySearch">
+        <option value="">Select Category...</option>
+        <option value="CATEGORY-A">Category A</option>
+        <option value="CATEGORY-A2">Category A2</option>
+        <option value="CATEGORY-A3">Category A3</option>
+        <option value="CATEGORY-A4">Category A4</option>
+        <option value="CATEGORY-A5">Category A5</option>
+        <option value="CATEGORY-A6">Category A6</option>
+        <option value="CATEGORY-A7">Category A7</option>
+        <option value="CATEGORY-B">Category B</option>
+        <option value="CATEGORY-C">Category C</option>
+        <option value="CATEGORY-D">Category D</option>
+        <option value="CATEGORY-E">Category E</option>
+        <option value="CATEGORY-F">Category F</option>
+      </select>
+      <button id="categorySearchBtn" type="button">Search 🔍︎</button>
+      <button id="genderSummaryBtn" type="button">Gender Summary ♂️♀️</button>
+      <button id="lguSummaryBtn" type="button">LGU SUMMARY OF SOLO PARENTS 📑</button>
+    </div>
+    <!-- Name search results appear directly below the search bar -->
+    <div id="nameSearchResults" class="search-results-list"></div>
+  </form>
+
+  <!-- FORM -->
+  <form id="registerForm">
+    <div class="form-row">
+      <label class="required">Last Name:</label><input type="text" id="lastName" required>
+      <label class="required">First Name:</label><input type="text" id="firstName" required>
+      <label>Middle Name:</label><input type="text" id="middleName">
+      <label>Suffix:</label>
+      <select id="suffix">
+        <option value="">None</option>
+        <option value="Jr.">Jr.</option>
+        <option value="Sr.">Sr.</option>
+        <option value="II">II</option>
+        <option value="III">III</option>
+      </select>
+    </div>
+
+    <div class="form-row">
+      <label class="required">Gender:</label>
+      <select id="gender" required>
+        <option value="">Select</option>
+        <option value="Male">M</option>
+        <option value="Female">F</option>
+      </select>
+      <label class="required">Birthdate:</label><input type="date" id="birthdate" required>
+      <label class="required">Date Registered:</label><input type="date" id="dateRegistered" required>
+    </div>
+
+    <div class="form-row">
+      <label class="required">Barangay:</label>
+      <select id="barangay" required>
+        <option value="">Select</option>
+        <option>Agape</option><option>Alegria Norte</option><option>Alegria Sur</option>
+        <option>Bonbon</option><option>Botoc Occidental</option><option>Botoc Oriental</option>
+        <option>Calvario</option><option>Concepcion</option><option>Hinawanan</option>
+        <option>Las Salinas Norte</option><option>Las Salinas Sur</option><option>Palo</option>
+        <option>Poblacion Ibabao</option><option>Poblacion Ubos</option><option>Sagnap</option>
+        <option>Tambangan</option><option>Tangcasan Norte</option><option>Tangcasan Sur</option>
+        <option>Tayong Occidental</option><option>Tayong Oriental</option>
+        <option>Tocdog Dacu</option><option>Tocdog Ilaya</option><option>Villalimpia</option>
+        <option>Yanangan</option>
+      </select>
+      <label class="required">Category:</label>
+      <select id="category" required>
+        <option value="">Select</option>
+        <option>CATEGORY-A</option><option>CATEGORY-A2</option><option>CATEGORY-A3</option>
+        <option>CATEGORY-A4</option><option>CATEGORY-A5</option><option>CATEGORY-A6</option>
+        <option>CATEGORY-A7</option><option>CATEGORY-B</option><option>CATEGORY-C</option>
+        <option>CATEGORY-D</option><option>CATEGORY-E</option><option>CATEGORY-F</option>
+      </select>
+    </div>
+
+    <div class="form-row">
+      <label class="required">BQ Code:</label>
+      <select id="bqCode" required>
+        <option value="">Select</option>
+        <option>A</option><option>B</option>
+      </select>
+      <label class="required">SP ID Number:</label><input type="text" id="spId" required>
+      <label class="required">ID Expiration:</label><input type="date" id="idExpiration" required>
+    </div>
+
+    <div class="form-row">
+      <label class="required">Civil Status:</label>
+      <select id="civilStatus" required>
+        <option value="">Select</option>
+        <option>Single</option>
+        <option>Married</option>
+        <option>Widowed</option>
+        <option>Legally Separated/Annulled</option>
+      </select>
+
+      <label class="required">Employment Status:</label>
+      <select id="employmentStatus" required>
+        <option value="">Select</option>
+        <option>Employed (public & private)</option>
+        <option>Self-employed</option>
+        <option>Not employed</option>
+      </select>
+
+      <label class="required">Monthly Income:</label>
+      <select id="monthlyIncome" required>
+        <option value="">Select</option>
+        <option value="Below minimum wage">Below minimum wage</option>
+        <option value="Minimum wage +1 to Php 20,833">Minimum wage +1 to Php 20,833</option>
+        <option value="Php 20,834 and above">Php 20,834 and above</option>
+      </select>
+    </div>
+
+    <div class="form-row">
+      <div>
+        <label>Philhealth:</label>
+        <input type="radio" name="philhealth" value="Yes"> Yes
+        <input type="radio" name="philhealth" value="No"> No |
+      </div>
+      <div>
+        <label class="required">Pantawid Beneficiary:</label>
+        <input type="radio" name="pantawid" value="Yes" required> Yes
+        <input type="radio" name="pantawid" value="No"> No |
+      </div>
+      <div>
+        <label class="required">Indigenous Person:</label>
+        <input type="radio" name="indigenous" value="Yes" required> Yes
+        <input type="radio" name="indigenous" value="No"> No |
+      </div>
+      <div>
+        <label class="required">LGBTQ+:</label>
+        <input type="radio" name="lgbtq" value="Yes" required> Yes
+        <input type="radio" name="lgbtq" value="No"> No |
+      </div>
+    </div>
+
+    <div class="children-section">
+      <h3>
+        <label class="required">Name of the Children 👤</label>
+        <button type="button" id="addChildrenBtn">Add Children ▼</button>
+      </h3>
+      <div id="childrenInputs" class="hidden"></div>
+    </div>
+
+    <div>
+      <button id="registerBtn">Register Solo Parent 💾</button>
+      <button id="showdataBtn" type="button">Show Data ▼</button>
+    </div>
+
+    <div class="search-section">
+      <input type="text" id="secondaryGlobalSearch" placeholder="Search across all fields...">
+      <button id="secondaryGlobalClearBtn" type="button">Clear</button>
+    </div>
+
+    <div class="search-results-container" class="scrollable-table">
+      <table id="secondaryGlobalResultsTable" >
+        <thead>
+          <tr>
+            <th>No.</th>
+            <th>Last Name</th>
+            <th>First Name</th>
+            <th>Middle Name</th>
+            <th>Suffix</th>
+            <th>Gender</th>
+            <th>Birthdate</th>
+            <th>Date Registered</th>
+            <th>Age</th>
+            <th>Barangay</th>
+            <th>Category</th>
+            <th>BQ Code</th>
+            <th>SP ID</th>
+            <th>ID Expiration</th>
+            <th>Children</th>
+            <th>Civil Status</th>
+            <th>Employment Status</th>
+            <th>Monthly Income</th>
+            <th>Philhealth</th>
+            <th>Pantawid</th>
+            <th>Indigenous</th>
+            <th>LGBTQ+</th>
+            <th>Edit</th>
+            <th>Delete</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <!-- TABLE -->
+    <div class="data-toggle-container">
+      <div id="dataTableContainer" class="hidden" class="scrollable-table">
+        <div class="sort-buttons">
+          <button id="sortlastname"onclick="sortTable('lastName')" type="button">Sort by Last Name</button>
+          <button id= "sortbarangay"onclick="sortTable('barangay')" type="button">Sort by Barangay</button>
+          <button id="sortcategory"onclick="sortTable('category')" type="button">Sort by Category</button>
+        </div>
+        <h3>All Records</h3>
+        <table id="dataTable">
+          <thead>
+            <tr>
+              <th>No.</th>
+              <th>Last Name</th>
+              <th>First Name</th>
+              <th>Middle Name</th>
+              <th>Suffix</th>
+              <th>Gender</th>
+              <th>Birthdate</th>
+              <th>Date Registered</th>
+              <th>Age</th>
+              <th>Barangay</th>
+              <th><strong>Category</strong></th>
+              <th>BQ Code</th>
+              <th>SP ID</th>
+              <th>ID Expiration</th>
+              <th>Children</th>
+              <th>Civil Status</th>
+              <th>Employment Status</th>
+              <th>Monthly Income</th>
+              <th>Philhealth</th>
+              <th>Pantawid</th>
+              <th>Indigenous</th>
+              <th>LGBTQ+</th>
+              <th>Edit</th>
+              <th>Delete</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+  </form>
+
+  <!-- POPUPS -->
+  <div id="genderPopup" class="popup hidden">
+    <div class="popup-content">
+      <span id="genderPopupClose">&times;</span>
+      <div id="genderPopupBody" class="scrollable-table"></div>
+      <div class="popup-actions">
+        <button id="genderPopupBack" type="button">Back</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="childrenPopup" class="popup hidden">
+    <div class="popup-content">
+      <span id="childrenPopupClose">&times;</span>
+      <div id="childrenPopupBody" class="scrollable-table"></div>
+      <div class="popup-actions">
+        <button id="childrenPopupBack" type="button">Back</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="categoryPopup" class="popup hidden">
+    <div class="popup-content">
+      <span id="categoryPopupClose">&times;</span>
+      <div id="categoryPopupBody" class="scrollable-table"></div>
+      <div class="popup-actions">
+        <button id="categoryPopupBack" type="button">Back</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="registrationPopup" class="popup hidden">
+    <div class="popup-content large-popup">
+      <span id="registrationPopupClose">&times;</span>
+      <div id="registrationPopupBody" class="scrollable-table"></div>
+      <div class="popup-actions">
+        <button id="registrationPopupConfirm" type="button">Confirm Add</button>
+        <button id="registrationPopupCancel" type="button">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="deletePopup" class="popup hidden">
+    <div class="popup-content large-popup">
+      <span id="deletePopupClose">&times;</span>
+      <div id="deletePopupBody" class="scrollable-table"></div>
+      <div class="popup-actions">
+        <button id="deletePopupConfirm" type="button">Yes, Delete</button>
+        <button id="deletePopupCancel" type="button">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="summaryPopup" class="popup hidden">
+    <div class="popup-content large-popup">
+      <span id="summaryPopupClose">&times;</span>
+      <div id="summaryPopupBody" class="scrollable-grid"></div>
+      <div class="popup-actions">
+        <button id="summaryPopupBack" type="button">Back</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="detailsPopup" class="popup hidden">
+    <div class="popup-content">
+      <span id="detailsPopupClose" class="popup-close">&times;</span>
+      <div id="detailsPopupBody" class="scrollable-table"></div>
+      <div class="popup-actions">
+        <button id="detailsPopupBack" type="button">Back</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="editPopup" class="popup hidden">
+    <div class="popup-content large-popup">
+      <span id="editPopupClose" class="popup-close">&times;</span>
+      <h3>Edit Record</h3>
+      <form id="editForm">
+        <div id="editFormBody"></div>
+        <div class="popup-actions">
+          <button type="button" id="editPopupConfirm">Confirm Changes</button>
+          <button type="button" id="editPopupCancel">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div id="editSuccessPopup" class="popup hidden">
+    <div class="popup-content">
+      <span id="editSuccessPopupClose" class="popup-close">&times;</span>
+      <h3 style="color:green;">Data Change Successful!</h3>
+      <div class="popup-actions">
+        <button type="button" id="editSuccessPopupBack">Back</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="editValidationPopup" class="popup hidden">
+    <div class="popup-content small-popup">
+      <span id="editValidationPopupClose" class="popup-close">&times;</span>
+      <h3>Incomplete Information</h3>
+      <p>Please fill in Barangay, Category, Civil Status, and Employment Status before proceeding.</p>
+      <div class="popup-actions">
+        <button type="button" id="editValidationPopupBack">Back to Edit Form</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Single logout handler (keeps behavior consistent with data.js)
+    document.getElementById("logoutBtn").addEventListener("click", () => {
+      localStorage.removeItem("loggedIn");
+      sessionStorage.removeItem("loggedIn");
+      window.location.replace("login.html");
+    });
+  </script>
+</body>
+</html>

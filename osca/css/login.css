@@ -1,0 +1,73 @@
+body {
+      font-family: Arial, sans-serif;
+      background: #f4f4f4;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .login-container {
+      background: white;
+      padding: 20px;
+      border: 2px solid #2c3e50;
+      border-radius: 8px;
+      width: 400px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.3);
+      text-align: center;
+    }
+    .login-header {
+      margin-bottom: 20px;
+    }
+    .login-logo {
+      height: 70px;
+      margin: 0 5px;
+    }
+    .login-box input {
+      width: 90%;
+      padding: 10px;
+      margin: 10px 0;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    .login-box button {
+      width: 95%;
+      padding: 10px;
+      background: #2c3e50;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .login-box button:hover {
+      background: #34495e;
+    }
+
+    ol {
+  list-style-type: decimal; /* numbers */
+}
+
+#resultsTable tbody tr:hover {
+  background-color: yellow !important;  /* highlight row on hover */
+  cursor: pointer;                      /* optional: pointer cursor */
+  transition: background-color 0.3s ease; /* smooth fade */
+}
+
+/* Secondary button styling */
+.outside-btn {
+  margin-top: 20px;
+  width: 95%;
+  padding: 10px;
+  background: #e0e0e0;     /* lighter background to distinguish */
+  color: #2c3e50;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+.outside-btn:hover {
+  background: #d5d5d5;
+  color: #000;
+}

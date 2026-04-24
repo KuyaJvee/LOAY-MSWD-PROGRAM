@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script>
+    // Redirect to login if not logged in
+    if (sessionStorage.getItem("loggedIn") !== "true") {
+      window.location.replace("loginsenior.html");
+    }
+  </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Senior Citizen Data</title>
+  <link rel="stylesheet" href="css/index.css">
+</head>
+<body id="indexpage">
+
+  <!-- Header -->
+  <header class="header-top">
+    <img src="img/SEAL OF LOAY.png" alt="Logo" class="logo">
+    <img src="img/SEAL OF MSWDO.png" alt="Logo" class="logo">
+    <div>
+    <h2 id="deptname">MUNICIPAL SOCIAL WELFARE AND DEVELOPMENT OFFICE - LOAY </h2>
+    <h2 id="lowertitle">OFFICE OF THE SENIOR CITIZEN AFFAIRS</h2></div>
+    <button id="birthdaytdyBtn">Today's Birthdays</button>
+    <button id="birthdaytomBtn">Tomorrow's Birthdays</button>
+    <input type="file" id="importFile" accept=".xlsx" style="display:none;" />
+    <button id="importBtn">Import Data</button>
+    <button id="exportBtn">Export Data</button>
+    <button id="logout-Btn">Logout</button>
+  </header>
+<!-- Search bar -->
+<input  type="text" id="searchBar" placeholder="Search senior citizens...">
+
+<!-- Search Dropdown -->
+<div style="margin:20px;">
+  <select id="ageCategory" style="padding:10px; font-size:16px; border-radius:6px;">
+    <option value="">OCTA/ NONA</option>
+    <option value="octogenarian">OCTOGENARIAN</option>
+    <option value="nonagenarian">NONAGENARIAN</option>
+  </select>
+  <button id="ageSearchBtn" style="padding:10px 16px; font-size:16px; border-radius:6px; background:#007bff; color:white; border:none; cursor:pointer;">
+    Search
+  </button>
+</div>
+
+<!-- Age Popup -->
+<div id="agePopup" class="popup">
+  <div class="popup-content">
+    <h3 id="agePopupTitle"></h3>
+    <table id="agePopupTable" style="width:100%; border-collapse:collapse; margin-bottom:15px;">
+      <!-- Rows filled dynamically -->
+    </table>
+    <button id="closeAgePopup" style="background:#2c3e50; color:white; padding:10px 18px; border:none; border-radius:4px; cursor:pointer;">Close</button>
+  </div>
+</div>
+
+
+<!-- Search results container -->
+<div class="header-bottom" id="searchResults"></div>
+ 
+<!-- Popup for details -->
+<div  id="detailsPopup" class="popup">
+  <div class="popup-content">
+    <h3>Senior Citizen Details</h3>
+    <table id="detailsTable" border="1" style="width:100%; margin-bottom:15px;"></table>
+    <button id="backBtn" style="background-color:gray; color:white; padding:10px; border:none; border-radius:4px; cursor:pointer;">Back</button>
+  </div>
+</div>
+
+  <!-- Registration Form -->
+  <form id="seniorForm" class="form-grid">
+    <div>
+      <label for="lastName"><span class="required">*</span> Last Name:</label>
+      <input type="text" id="lastName" required>
+    </div>
+    <div>
+      <label for="firstName"><span class="required">*</span> First Name:</label>
+      <input type="text" id="firstName" required>
+    </div>
+    <div>
+      <label for="middleName">Middle Name:</label>
+      <input type="text" id="middleName">
+    </div>
+    <div>
+      <label for="suffix">Suffix:</label>
+      <select id="suffix">
+        <option value="">-- Select Suffix --</option>
+        <option value="Jr.">Jr.</option>
+        <option value="Sr.">Sr.</option>
+        <option value="II">II</option>
+        <option value="III">III</option>
+      </select>
+    </div>
+    <div>
+      <label for="gender"><span class="required">*</span> Gender:</label>
+      <select id="gender" required>
+        <option value="">-- Select Gender --</option>
+        <option value="Male">Male</option>
+        <option value="Female">Female</option>
+      </select>
+    </div>
+    <div>
+      <label for="birthDate"><span class="required">*</span> Birth Date:</label>
+      <input type="date" id="birthDate" required>
+    </div>
+    <div>
+      <label for="dateRegistered"><span class="required">*</span> Date Registered:</label>
+      <input type="date" id="dateRegistered" required>
+    </div>
+    <div>
+      <label for="Barangay"><span class="required">*</span> Barangay:</label>
+      <select id="Barangay" required>
+        <!-- Barangay options here -->
+        <option value="Agape">Agape</option>
+        <option value="Alegria Norte">Alegria Norte</option>
+        <option value="Alegria Sur">Alegria Sur</option>
+        <option value="Bonbon">Bonbon</option>
+        <option value="Botoc Occidental">Botoc Occidental</option>
+        <option value="Botoc Oriental">Botoc Oriental</option>
+        <option value="Calvario">Calvario</option>
+        <option value="Concepcion">Concepcion</option>
+        <option value="Hinawanan">Hinawanan</option>
+        <option value="Las Salinas Norte">Las Salinas Norte</option>
+        <option value="Las Salinas Sur">Las Salinas Sur</option>
+        <option value="Palo">Palo</option>
+        <option value="Poblacion Ibabao">Poblacion Ibabao</option>
+        <option value="Poblacion Ubos">Poblacion Ubos</option>
+        <option value="Sagnap">Sagnap</option>
+        <option value="Tambangan">Tambangan</option>
+        <option value="Tangcasan Norte">Tangcasan Norte</option>
+        <option value="Tangcasan Sur">Tangcasan Sur</option>
+        <option value="Tayong Occidental">Tayong Occidental</option>
+        <option value="Tayong Oriental">Tayong Oriental</option>
+        <option value="Tocdog Dacu">Tocdog Dacu</option>
+        <option value="Tocdog Ilaya">Tocdog Ilaya</option>
+        <option value="Villalimpia">Villalimpia</option>
+        <option value="Yanangan">Yanangan</option>
+      </select>
+    </div>
+    <div>
+      <label for="pensionType"><span class="required">*</span> Pension Type:</label>
+      <select id="pensionType" required>
+        <option value="">-- Select Pension --</option>
+        <option value="UNKNOWN">UNKNOWN</option>
+        <option value="SOCPEN">SOCPEN</option>
+        <option value="SSS">SSS</option>
+        <option value="GSIS">GSIS</option>
+        <option value="PVAO">PVAO</option>
+        <option value="SURVIVOR">SURVIVOR</option>
+      </select>
+    </div>
+    <div>
+      <label for="IDnumber"><span class="required">*</span> OSCA ID:</label>
+      <input type="text" id="IDnumber" required>
+    </div>
+    <div>
+      <label>Philhealth:</label>
+      <label><input type="radio" name="philhealth" value="Yes"> Yes</label>
+      <label><input type="radio" name="philhealth" value="No"> No</label>
+      <button id="registerBtn" type="button" style="background:green; color:white; padding:8px; border:none; border-radius:4px;">Register Senior Citizen</button>
+
+      <button id="toggleTableBtn" type="button">Show Table</button>
+    </div>
+  </form>
+  
+
+<!-- Table container (hidden by default) -->
+
+<div id="tableContainer" class="table-container" style="display:none;">
+  <input type="text" id="secondarySearchBar" placeholder="Search table by Full Name, OSCA ID, or Birthdate" style="margin-bottom:10px; width:350px; padding:5px;">
+  <button id="clearSecondarySearch" style="margin-left:5px; background:gray; color:white; padding:5px; border:none; border-radius:4px;">Clear</button>
+  <table id="resultsTable" border="1">
+    <thead>
+      <tr>
+        <th>No</th>
+        <th>Last Name</th>
+        <th>First Name</th>
+        <th>Middle Name</th>
+        <th>Suffix</th>
+        <th>Gender</th>
+        <th>Birth Date</th>
+        <th>Date Registered</th>
+        <th>Age</th>
+        <th>Barangay</th>
+        <th>OSCA ID</th>
+        <th>Pension</th>
+        <th>Philhealth</th>
+        <th>Edit</th>
+        <th>Delete</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+</div>
+
+  <!-- Popups -->
+  <!-- Duplicate Detected Popup -->
+<div id="duplicatePopup" class="popup" style="display:none;">
+  <div class="popup-content">
+    <h3 style="color:red;">Duplicate Data Detected</h3>
+    <p>A record with similar details already exists. Compare below:</p>
+    <div style="display:flex; gap:20px; margin-top:10px;">
+      <!-- New Data -->
+      <div style="flex:1;">
+        <h4>New Data (Entered)</h4>
+        <table id="newDataTable" style="width:100%; border-collapse:collapse;"></table>
+      </div>
+      <!-- Existing Data -->
+      <div style="flex:1;">
+        <h4>Existing Data (Duplicate)</h4>
+        <table id="existingDataTable" style="width:100%; border-collapse:collapse;"></table>
+      </div>
+    </div>
+    <div style="margin-top:15px; text-align:right;">
+      <button id="updateBtn" style="background:green; color:white; padding:8px; border:none; border-radius:4px;">Update Data</button>
+      <button id="cancelDupBtn" style="background:gray; color:white; padding:8px; border:none; border-radius:4px;">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- Update Success Popup -->
+<div id="updateSuccessPopup" class="popup" style="display:none;">
+  <div class="popup-content">
+    <h3 style="color:green;">Update Successfully!</h3>
+    <div style="margin-top:15px; text-align:right;">
+      <button id="okUpdateBtn" style="background:gray; color:white; padding:8px; border:none; border-radius:4px;">OK</button>
+    </div>
+  </div>
+</div>
+
+
+  <div id="datasavePopup" class="popup">
+    <div class="popup-content">
+      <h3>Confirm Save</h3>
+      <p id="datasaveMessage">Do you want to SAVE this SC Data?</p>
+      <div id="datasaveDetails"></div>
+      <div class="popup-actions">
+        <button id="saveBtn">Yes, Save</button>
+        <button id="cancelSaveBtn">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+<!-- Review Before Add Popup -->
+<div id="reviewPopup" class="popup" style="display:none;">
+  <div class="popup-content">
+    <h3>Add Senior Citizen?</h3>
+    <table id="reviewDetailsTable" style="width:100%; border-collapse:collapse; margin-bottom:15px;">
+      <!-- Filled dynamically -->
+    </table>
+    <div style="text-align:right;">
+      <button id="confirmAddBtn" style="background:green; color:white; padding:8px; border:none; border-radius:4px;">Confirm Add</button>
+      <button id="cancelAddBtn" style="background:gray; color:white; padding:8px; border:none; border-radius:4px;">Cancel</button>
+    </div>
+  </div>
+</div>
+
+
+  <!-- Delete Confirmation Popup -->
+<div id="deletePopup" class="popup" style="display:none;">
+  <div class="popup-content">
+    <h3 style="color: red;">Confirm Delete Senior Citizen</h3>
+    <table id="deleteDetailsTable" style="width:100%; border-collapse:collapse; margin-bottom:15px;">
+      <!-- Filled dynamically -->
+    </table>
+    <div style="text-align:right;">
+      <button id="confirmdeleteBtn" style="background:red; color:white; padding:8px; border:none; border-radius:4px;">Confirm Delete</button>
+      <button id="canceldeleteBtn" style="background:gray; color:white; padding:8px; border:none; border-radius:4px;">Cancel</button>
+    </div>
+  </div>
+</div>
+
+
+
+  <div id="birthdayPopup" class="popup">
+    <div class="popup-content">
+      <h3 id="birthdayPopupTitle"></h3>
+      <ul id="birthdayList"></ul>
+      <button id="closePopup">Close</button>
+    </div>
+  </div>
+
+<!-- Edit Popup -->
+<div id="editPopup" class="popup" style="display:none;">
+  <div class="popup-content">
+    <h3>Edit Senior Citizen</h3>
+    <form id="editForm">
+      <table style="width:100%; border-collapse:collapse;">
+        <tr>
+          <td><label for="editLastName">Last Name:</label></td>
+          <td><input type="text" id="editLastName"></td>
+        </tr>
+        <tr>
+          <td><label for="editFirstName">First Name:</label></td>
+          <td><input type="text" id="editFirstName"></td>
+        </tr>
+        <tr>
+          <td><label for="editMiddleName">Middle Name:</label></td>
+          <td><input type="text" id="editMiddleName"></td>
+        </tr>
+        <tr>
+          <td><label for="editSuffix">Suffix:</label></td>
+          <td>
+            <select id="editSuffix">
+              <option value="">-- Select Suffix --</option>
+              <option value="Jr.">Jr.</option>
+              <option value="Sr.">Sr.</option>
+              <option value="II">II</option>
+              <option value="III">III</option>
+              <option value="IV">IV</option>
+            </select>
+          </td>
+        </tr>
+        <tr>
+          <td><label for="editGender">Gender:</label></td>
+          <td>
+            <select id="editGender">
+              <option value="">-- Select Gender --</option>
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
+            </select>
+          </td>
+        </tr>
+        <tr>
+          <td><label for="editBirthDate">Birth Date:</label></td>
+          <td><input type="date" id="editBirthDate"></td>
+        </tr>
+        <tr>
+          <td><label for="editDateRegistered">Date Registered:</label></td>
+          <td><input type="date" id="editDateRegistered"></td>
+        </tr>
+        <tr>
+          <td><label for="editBarangay">Barangay:</label></td>
+          <td>
+            <select id="editBarangay">
+              <option value="Agape">Agape</option>
+              <option value="Alegria Norte">Alegria Norte</option>
+              <option value="Alegria Sur">Alegria Sur</option>
+              <option value="Bonbon">Bonbon</option>
+              <option value="Botoc Occidental">Botoc Occidental</option>
+              <option value="Botoc Oriental">Botoc Oriental</option>
+              <option value="Calvario">Calvario</option>
+              <option value="Concepcion">Concepcion</option>
+              <option value="Hinawanan">Hinawanan</option>
+              <option value="Las Salinas Norte">Las Salinas Norte</option>
+              <option value="Las Salinas Sur">Las Salinas Sur</option>
+              <option value="Palo">Palo</option>
+              <option value="Poblacion Ibabao">Poblacion Ibabao</option>
+              <option value="Poblacion Ubos">Poblacion Ubos</option>
+              <option value="Sagnap">Sagnap</option>
+              <option value="Tambangan">Tambangan</option>
+              <option value="Tangcasan Norte">Tangcasan Norte</option>
+              <option value="Tangcasan Sur">Tangcasan Sur</option>
+              <option value="Tayong Occidental">Tayong Occidental</option>
+              <option value="Tayong Oriental">Tayong Oriental</option>
+              <option value="Tocdog Dacu">Tocdog Dacu</option>
+              <option value="Tocdog Ilaya">Tocdog Ilaya</option>
+              <option value="Villalimpia">Villalimpia</option>
+              <option value="Yanangan">Yanangan</option>
+            </select>
+          </td>
+        </tr>
+        <tr>
+          <td><label for="editIDnumber">OSCA ID Number:</label></td>
+          <td><input type="text" id="editIDnumber"></td>
+        </tr>
+        <tr>
+          <td><label for="editPension">Pension Type:</label></td>
+          <td>
+            <select id="editPension">
+              <option value="">-- Select Pension --</option>
+              <option value="SSS">SSS</option>
+              <option value="GSIS">GSIS</option>
+              <option value="Private">Private</option>
+              <option value="None">None</option>
+            </select>
+          </td>
+        </tr>
+        <tr>
+          <td><label for="editPhilhealth">PhilHealth:</label></td>
+          <td>
+            <select id="editPhilhealth">
+              <option value="">-- Select PhilHealth --</option>
+              <option value="Yes">Yes</option>
+              <option value="No">No</option>
+            </select>
+          </td>
+        </tr>
+      </table>
+    </form>
+    <div style="margin-top:15px; text-align:right;">
+      <button id="confirmEditBtn" style="background:green; color:white; padding:8px; border:none; border-radius:4px;">Confirm Changes</button>
+      <button id="cancelEditBtn" style="background:gray; color:white; padding:8px; border:none; border-radius:4px;">Cancel</button>
+    </div>
+  </div>
+</div>
+
+
+<!-- Success Popup -->
+<div id="successPopup" class="popup" style="display:none;">
+  <div class="popup-content">
+    <h3>Changes Saved Successfully!</h3>
+    <button id="okBtn" style="background:rgb(179, 179, 179); color:white; padding:8px; border:none; border-radius:4px;">Okay</button>
+  </div>
+</div>
+<script>
+    // Single logout handler (keeps behavior consistent with data.js)
+    document.getElementById("logoutBtn").addEventListener("click", () => {
+      localStorage.removeItem("loggedIn");
+      sessionStorage.removeItem("loggedIn");
+      window.location.replace("login.html");
+    });
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <script src="seniordatajs/seniordata.js"></script>
+</body>
+</html>
