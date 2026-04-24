@@ -15,17 +15,27 @@
 
   <!-- Program Options -->
   <div class="container">
-    <!-- OSCA Option -->
-    <div class="card" onclick="location.href='osca/loginsenior.html'">
-      <img src="img/OSCA LOGO.png" alt="OSCA Logo">
-      <h2>OSCA</h2>
-    </div>
+   <!-- OSCA Option -->
+<div class="card" onclick="chooseProgram('senior')">
+  <img src="img/OSCA LOGO.png" alt="OSCA Logo">
+  <h2>OSCA</h2>
+</div>
 
-    <!-- Solo Parent Option -->
-    <div class="card" onclick="location.href='soloparent/loginsp.html'">
-      <img src="img/SOLO PARENT LOGO.png" alt="Solo Parent Logo">
-      <h2>Solo Parent</h2>
-    </div>
-  </div>
-</body>
-</html>
+<!-- Solo Parent Option -->
+<div class="card" onclick="chooseProgram('sp')">
+  <img src="img/SOLO PARENT LOGO.png" alt="Solo Parent Logo">
+  <h2>Solo Parent</h2>
+</div>
+
+<script>
+  function chooseProgram(program) {
+    // Mark chosen program
+    sessionStorage.setItem("programChosen", program);
+
+    if (program === "senior") {
+      window.location.href = "osca/loginsenior.html";
+    } else if (program === "sp") {
+      window.location.href = "soloparent/loginsp.html";
+    }
+  }
+</script>

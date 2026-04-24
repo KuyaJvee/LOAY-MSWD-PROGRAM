@@ -1,5 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
+  <script>
+  // Block direct access if program not chosen
+  if (sessionStorage.getItem("programChosen") !== "sp") {
+    window.location.href = "../index.html";
+  }
+</script>
+
 <head>
   <meta charset="UTF-8">
   <title>Login - SOLO Parent</title>

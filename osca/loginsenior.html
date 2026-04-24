@@ -1,5 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
+  <script>
+  // Block direct access if program not chosen
+  if (sessionStorage.getItem("programChosen") !== "senior") {
+    window.location.href = "../index.html";
+  }
+</script>
 <head>
   <meta charset="UTF-8">
   <title>Login - Senior MSWDO Loay</title>
